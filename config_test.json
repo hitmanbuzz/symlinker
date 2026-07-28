@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "author": "hitmanbuzz",
+    "sym_paths": [
+        {
+            "name": "alacritty",
+            "original_path": "~/dotfiles/config/alacritty/alacritty",
+            "target_path": "~/projects/gosty/symlinker",
+            "description": "Terminal Emulator"
+        },
+        {
+            "name": "bash",
+            "original_path": "~/dotfiles/config/bash/.bashrc",
+            "target_path": "~/projects/gosty/symlinker",
+            "description": "Bash Shell Config"
+        }
+    ]
+}
