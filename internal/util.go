@@ -22,6 +22,11 @@ const (
 	RESET_COLOR           = "\033[0m"
 )
 
+func IsExist(p string) error {
+	_, err := os.Stat(p)
+	return err
+}
+
 func HashFile(filePath string) (string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {

@@ -21,6 +21,11 @@ type Config struct {
 }
 
 func (p Path) isExist() (error, bool) {
+	err := IsExist(p.Original)
+	if err != nil {
+		return fmt.Errorf("original_path: `%s` doesn't exist", p.Original), false
+	}
+
 	targetFullPath := filepath.Join(p.Target, p.Entity)
 	stat, exist := os.Lstat(targetFullPath)
 	if exist == nil {
@@ -69,7 +74,7 @@ func (c Config) SetSymLink() (uint, error) {
 			continue
 		}
 
-		err = os.Symlink(p.Original, p.Entity)
+		err = os.Symlink(p.Original, filepath.Join(p.Target, p.Entity))
 		if err != nil {
 			return symlinkCount, fmt.Errorf(
 				"%s[ERROR]%s: %w",
