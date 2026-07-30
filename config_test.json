@@ -5,13 +5,13 @@
         {
             "name": "alacritty",
             "original_path": "~/dotfiles/config/alacritty/alacritty",
-            "target_path": "~/projects/gosty/symlinker",
+            "target_path": ".",
             "description": "Terminal Emulator"
         },
         {
             "name": "bash",
             "original_path": "~/dotfiles/config/bash/.bashrc",
-            "target_path": "~/projects/gosty/symlinker",
+            "target_path": "../symlinker",
             "description": "Bash Shell Config"
         }
     ]

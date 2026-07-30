@@ -61,7 +61,7 @@ func (s *Sanitizer) sanitize_current() error {
 		// shouldn't have any error
 		lastSlash := strings.LastIndex(ConfigPath, "/")
 		if lastSlash == -1 {
-			return fmt.Errorf("`/` not found in the path")
+			return fmt.Errorf("`/` not found in original path")
 		}
 		s.path.Original = ConfigPath[:lastSlash]
 	}
@@ -69,11 +69,13 @@ func (s *Sanitizer) sanitize_current() error {
 	// target
 	if s.path.Target == "." || strings.HasPrefix(s.path.Target, "./") {
 		// shouldn't have any error
-		lastSlash := strings.LastIndex(ConfigPath, "/")
-		if lastSlash == -1 {
-			return fmt.Errorf("`/` not found in the path")
+		s.path.Target = filepath.Dir(ConfigPath)
+	} else {
+		absPath, err := filepath.Abs(ConfigPath)
+		if err != nil {
+			return err
 		}
-		s.path.Target = ConfigPath[:lastSlash]
+		s.path.Target = absPath
 	}
 
 	return nil
