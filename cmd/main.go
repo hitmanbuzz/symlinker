@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"symlinker/internal"
 )
@@ -24,13 +23,15 @@ func main() {
 	internal.ConfigPath = args[1]
 	content, err := os.ReadFile(internal.ConfigPath)
 	if err != nil {
-		log.Fatal("failed to read config.json file:", err)
+		fmt.Fprintf(os.Stderr, "faild to read `%s` file: %v\n", internal.ConfigPath, err)
+		return
 	}
 
 	var config internal.Config
 	err = json.Unmarshal(content, &config)
 	if err != nil {
-		log.Fatal("failed to parse config.json file:", err)
+		fmt.Fprintf(os.Stderr, "failed to parse `%s` file: %v\n", internal.ConfigPath, err)
+		return
 	}
 
 	count, err := config.SetSymLink()
@@ -38,5 +39,6 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
+
 	fmt.Printf("%s[TOTAL SYMLINK]%s: %d\n", internal.CYAN_COLOR, internal.RESET_COLOR, count)
 }

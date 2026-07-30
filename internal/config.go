@@ -20,9 +20,6 @@ type Config struct {
 	Version  uint8  `json:"version"`
 }
 
-// FIX: compare the data hash of the path with the original path data hash
-//
-// This make sure that the current existing symlink is the same as the original or not
 func (p Path) isExist() (error, bool) {
 	targetFullPath := filepath.Join(p.Target, p.Entity)
 	stat, exist := os.Lstat(targetFullPath)
