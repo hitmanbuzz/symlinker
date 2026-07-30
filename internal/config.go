@@ -26,6 +26,16 @@ func (p Path) isExist() (error, bool) {
 		return fmt.Errorf("original_path: `%s` doesn't exist", p.Original), false
 	}
 
+	err = IsExist(p.Target)
+	if err != nil {
+		err = os.MkdirAll(p.Target, 0755)
+		if err != nil {
+			return err, false
+		}
+
+		fmt.Printf("%s[DIR CREATE]%s: `%s`\n", BLUE_COLOR, RESET_COLOR, p.Target)
+	}
+
 	targetFullPath := filepath.Join(p.Target, p.Entity)
 	stat, exist := os.Lstat(targetFullPath)
 	if exist == nil {
