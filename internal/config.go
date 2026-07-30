@@ -30,7 +30,7 @@ func (p Path) isExist() (error, bool) {
 	stat, exist := os.Lstat(targetFullPath)
 	if exist == nil {
 		if stat.Mode()&os.ModeSymlink != 0 {
-			err, isSame := IsSameSymlink(p.Original, targetFullPath, p.Entity)
+			err, isSame := IsSameSymlink(p.Original, targetFullPath, p.Name)
 			return err, isSame
 		} else {
 			return fmt.Errorf("a non-symlink path already exist"), false

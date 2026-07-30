@@ -43,7 +43,7 @@ func HashFile(filePath string) (string, error) {
 	return hex.EncodeToString(hasher.Sum(nil)), nil
 }
 
-func IsSameSymlink(original string, target string, entity string) (error, bool) {
+func IsSameSymlink(original string, target string, name string) (error, bool) {
 	oriStat, err := os.Stat(original)
 	if err != nil {
 		return err, false
@@ -71,7 +71,7 @@ func IsSameSymlink(original string, target string, entity string) (error, bool) 
 		}
 
 		if oriHash == targetHash {
-			fmt.Printf("%s[DUPLICATE]%s: %s\n", YELLOW_COLOR, RESET_COLOR, entity)
+			fmt.Printf("%s[DUPLICATE]%s: %s\n", YELLOW_COLOR, RESET_COLOR, name)
 			return nil, true
 		} else {
 			return fmt.Errorf("a different symlink with same name already exist"), false
@@ -93,7 +93,7 @@ func IsSameSymlink(original string, target string, entity string) (error, bool) 
 		}
 
 		if oriHash == targetHash {
-			fmt.Printf("%s[DUPLICATE]%s: %s\n", YELLOW_COLOR, RESET_COLOR, entity)
+			fmt.Printf("%s[DUPLICATE]%s: %s\n", YELLOW_COLOR, RESET_COLOR, name)
 			return nil, true
 		} else {
 			return fmt.Errorf("a different symlink with same name already exist"), false
