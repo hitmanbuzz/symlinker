@@ -31,7 +31,6 @@ func (s *Sanitizer) sanitize_home() error {
 		if err != nil {
 			return err
 		}
-
 		s.path.Original = filepath.Join(home, s.path.Original[2:])
 	}
 
@@ -47,7 +46,6 @@ func (s *Sanitizer) sanitize_home() error {
 		if err != nil {
 			return err
 		}
-
 		s.path.Target = filepath.Join(home, s.path.Target[2:])
 	}
 	return nil
@@ -57,18 +55,13 @@ func (s *Sanitizer) sanitize_home() error {
 //
 // eg: ./config.toml
 func (s *Sanitizer) sanitize_current() error {
+	// original
 	if s.path.Original == "." || strings.HasPrefix(s.path.Original, "./") {
-		// shouldn't have any error
-		lastSlash := strings.LastIndex(ConfigPath, "/")
-		if lastSlash == -1 {
-			return fmt.Errorf("`/` not found in original path")
-		}
-		s.path.Original = ConfigPath[:lastSlash]
+		s.path.Original = filepath.Dir(ConfigPath)
 	}
 
 	// target
 	if s.path.Target == "." || strings.HasPrefix(s.path.Target, "./") {
-		// shouldn't have any error
 		s.path.Target = filepath.Dir(ConfigPath)
 	} else {
 		absPath, err := filepath.Abs(ConfigPath)
