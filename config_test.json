@@ -3,16 +3,10 @@
     "author": "hitmanbuzz",
     "sym_paths": [
         {
-            "name": "alacritty",
-            "original_path": "~/dotfiles/config/alacritty/alacritty",
-            "target_path": "~/.config",
-            "description": "Terminal Emulator"
-        },
-        {
-            "name": "bash",
-            "original_path": "~/dotfiles/config_clone/scripts/.bashrc",
+            "name": "test",
+            "original_path": "./build/LICENSE",
             "target_path": "~",
-            "description": "Bash Shell Config"
+            "description": "Terminal Emulator"
         }
     ]
 }

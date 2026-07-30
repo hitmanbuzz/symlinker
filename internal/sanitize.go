@@ -29,10 +29,13 @@ func (s *Sanitizer) sanitize_path() error {
 		}
 		s.path.Original = filepath.Join(home, s.path.Original[2:])
 	} else {
-		s.path.Original = filepath.Dir(ConfigPath)
+		absPath, err := filepath.Abs(s.path.Original)
+		if err != nil {
+			return err
+		}
+		s.path.Original = absPath
 	}
 
-	// target
 	if s.path.Target == "~" {
 		home, err := os.UserHomeDir()
 		if err != nil {
@@ -46,7 +49,11 @@ func (s *Sanitizer) sanitize_path() error {
 		}
 		s.path.Target = filepath.Join(home, s.path.Target[2:])
 	} else {
-		s.path.Target = filepath.Dir(ConfigPath)
+		absPath, err := filepath.Abs(s.path.Target)
+		if err != nil {
+			return err
+		}
+		s.path.Target = absPath
 	}
 
 	return nil
