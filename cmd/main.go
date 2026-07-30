@@ -33,10 +33,10 @@ func main() {
 		log.Fatal("failed to parse config.json file:", err)
 	}
 
-	err = config.SetSymLink()
+	count, err := config.SetSymLink()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
-	fmt.Printf("TOTAL SYMLINK: %d\n", len(config.SymPaths))
+	fmt.Printf("%s[TOTAL SYMLINK]%s: %d\n", internal.CYAN_COLOR, internal.RESET_COLOR, count)
 }

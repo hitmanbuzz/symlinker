@@ -23,22 +23,23 @@ type Config struct {
 // FIX: compare the data hash of the path with the original path data hash
 //
 // This make sure that the current existing symlink is the same as the original or not
-func (p Path) isExist() error {
-	fullPath := filepath.Join(p.Target, p.Entity)
-	stat, exist := os.Lstat(fullPath)
+func (p Path) isExist() (error, bool) {
+	targetFullPath := filepath.Join(p.Target, p.Entity)
+	stat, exist := os.Lstat(targetFullPath)
 	if exist == nil {
 		if stat.Mode()&os.ModeSymlink != 0 {
-			return fmt.Errorf("a symlink path already exist")
+			err, isSame := IsSameSymlink(p.Original, targetFullPath, p.Entity)
+			return err, isSame
 		} else {
-			return fmt.Errorf("a non-symlink path already exist")
+			return fmt.Errorf("a non-symlink path already exist"), false
 		}
 	}
-	return nil
+	return nil, false
 }
 
-func (c Config) SetSymLink() error {
+func (c Config) SetSymLink() (uint, error) {
 	if c.Version != CURRENT_VERSION {
-		return fmt.Errorf(
+		return 0, fmt.Errorf(
 			"%s[ERROR]%s: config version is %d but the program support version %d only",
 			RED_COLOR,
 			RESET_COLOR,
@@ -47,22 +48,41 @@ func (c Config) SetSymLink() error {
 		)
 	}
 
+	var symlinkCount uint = 0
+
 	for _, p := range c.SymPaths {
 		s := NewSanitizer(&p)
 		err := s.Sanitize()
 		if err != nil {
-			return err
+			return symlinkCount, err
 		}
+
+		err, exist := p.isExist()
+		if err != nil {
+			return symlinkCount, fmt.Errorf(
+				"%s[ERROR]%s: %s : %w",
+				RED_COLOR,
+				RESET_COLOR,
+				s.path.Name,
+				err,
+			)
+		}
+
+		if exist {
+			continue
+		}
+
 		err = os.Symlink(p.Original, p.Entity)
 		if err != nil {
-			return fmt.Errorf(
+			return symlinkCount, fmt.Errorf(
 				"%s[ERROR]%s: %w",
 				RED_COLOR,
 				RESET_COLOR,
 				err,
 			)
 		}
+		symlinkCount++
 		fmt.Printf("%s[SUCCESS]%s: %s\n", GREEN_COLOR, RESET_COLOR, p.Name)
 	}
-	return nil
+	return symlinkCount, nil
 }

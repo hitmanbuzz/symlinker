@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -29,14 +28,8 @@ func (s *Sanitizer) sanitize_path() error {
 			return err
 		}
 		s.path.Original = filepath.Join(home, s.path.Original[2:])
-	} else if s.path.Original == "." || strings.HasPrefix(s.path.Original, "./") {
-		s.path.Original = filepath.Dir(ConfigPath)
 	} else {
-		absPath, err := filepath.Abs(ConfigPath)
-		if err != nil {
-			return err
-		}
-		s.path.Original = absPath
+		s.path.Original = filepath.Dir(ConfigPath)
 	}
 
 	// target
@@ -52,14 +45,8 @@ func (s *Sanitizer) sanitize_path() error {
 			return err
 		}
 		s.path.Target = filepath.Join(home, s.path.Target[2:])
-	} else if s.path.Target == "." || strings.HasPrefix(s.path.Target, "./") {
-		s.path.Target = filepath.Dir(ConfigPath)
 	} else {
-		absPath, err := filepath.Abs(ConfigPath)
-		if err != nil {
-			return err
-		}
-		s.path.Target = absPath
+		s.path.Target = filepath.Dir(ConfigPath)
 	}
 
 	return nil
@@ -71,17 +58,6 @@ func (s *Sanitizer) Sanitize() error {
 	err := s.sanitize_path()
 	if err != nil {
 		return err
-	}
-
-	err = s.path.isExist()
-	if err != nil {
-		return fmt.Errorf(
-			"%s[ERROR]%s: %s : %w",
-			RED_COLOR,
-			RESET_COLOR,
-			s.path.Name,
-			err,
-		)
 	}
 
 	return nil
