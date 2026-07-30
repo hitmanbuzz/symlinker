@@ -15,10 +15,7 @@ func NewSanitizer(path *Path) *Sanitizer {
 	return &Sanitizer{path}
 }
 
-// handle home directory
-//
-// eg: ~/dotfiles/config.toml -> /home/username/dotfiles/config.toml
-func (s *Sanitizer) sanitize_home() error {
+func (s *Sanitizer) sanitize_path() error {
 	// original
 	if s.path.Original == "~" {
 		home, err := os.UserHomeDir()
@@ -32,6 +29,14 @@ func (s *Sanitizer) sanitize_home() error {
 			return err
 		}
 		s.path.Original = filepath.Join(home, s.path.Original[2:])
+	} else if s.path.Original == "." || strings.HasPrefix(s.path.Original, "./") {
+		s.path.Original = filepath.Dir(ConfigPath)
+	} else {
+		absPath, err := filepath.Abs(ConfigPath)
+		if err != nil {
+			return err
+		}
+		s.path.Original = absPath
 	}
 
 	// target
@@ -47,21 +52,7 @@ func (s *Sanitizer) sanitize_home() error {
 			return err
 		}
 		s.path.Target = filepath.Join(home, s.path.Target[2:])
-	}
-	return nil
-}
-
-// handle current directory
-//
-// eg: ./config.toml
-func (s *Sanitizer) sanitize_current() error {
-	// original
-	if s.path.Original == "." || strings.HasPrefix(s.path.Original, "./") {
-		s.path.Original = filepath.Dir(ConfigPath)
-	}
-
-	// target
-	if s.path.Target == "." || strings.HasPrefix(s.path.Target, "./") {
+	} else if s.path.Target == "." || strings.HasPrefix(s.path.Target, "./") {
 		s.path.Target = filepath.Dir(ConfigPath)
 	} else {
 		absPath, err := filepath.Abs(ConfigPath)
@@ -74,22 +65,10 @@ func (s *Sanitizer) sanitize_current() error {
 	return nil
 }
 
-// handle previous directory
-//
-// eg: ../../config.toml
-func (s *Sanitizer) sanitize_previous() error {
-	return nil
-}
-
 func (s *Sanitizer) Sanitize() error {
 	s.path.Entity = filepath.Base(s.path.Original)
 
-	err := s.sanitize_home()
-	if err != nil {
-		return err
-	}
-
-	err = s.sanitize_current()
+	err := s.sanitize_path()
 	if err != nil {
 		return err
 	}
