@@ -1,12 +1,10 @@
 {
     "version": 1,
-    "author": "hitmanbuzz",
     "sym_paths": [
         {
-            "name": "test",
-            "original_path": "./build/LICENSE",
-            "target_path": "~",
-            "description": "Terminal Emulator"
+            "name": "MIT LICENSE",
+            "original_path": "LICENSE",
+            "target_path": "./build"
         }
     ]
 }
