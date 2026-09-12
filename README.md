@@ -1,7 +1,5 @@
 # Symlinker
 
-A Simple Program to symlink files and directories to their respective path
+An alternative to gnu `stow` but minimal and explicit symlinking program.
 
-It needs the original file/directory path and the target path to put the symlink.
-
-It just read the necessary data from the json file to do all the symlinking process.
+This project is mainly made for my personal use case.
