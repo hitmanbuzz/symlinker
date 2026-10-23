@@ -76,8 +76,16 @@ func (p *Path) IsExist() (bool, error) {
 
 func (p *Path) Sanitize() error {
 	p.Base = filepath.Base(p.Original)
-	sanitize(&p.Original)
-	sanitize(&p.Target)
+	err := sanitize(&p.Original)
+	if err != nil {
+		return err
+	}
+
+	err = sanitize(&p.Target)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
