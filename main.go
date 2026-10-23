@@ -9,13 +9,13 @@ import (
 var ConfigJsonPath string
 
 const (
-	CURRENT_VERSION uint8 = 1
-	GREEN_COLOR           = "\033[32m"
-	YELLOW_COLOR          = "\033[33m"
-	RED_COLOR             = "\033[31m"
-	CYAN_COLOR            = "\033[36m"
-	BLUE_COLOR            = "\033[34m"
-	RESET_COLOR           = "\033[0m"
+	CURRENT_VERSION float32 = 1.0
+	GREEN_COLOR             = "\033[32m"
+	YELLOW_COLOR            = "\033[33m"
+	RED_COLOR               = "\033[31m"
+	CYAN_COLOR              = "\033[36m"
+	BLUE_COLOR              = "\033[34m"
+	RESET_COLOR             = "\033[0m"
 )
 
 func main() {

@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	SymPaths []*Path `json:"sym_paths"`
-	Version  uint8   `json:"version"`
+	Version  float32 `json:"version"`
 }
 
 type Path struct {
@@ -58,14 +58,14 @@ func (p *Path) IsExist() (bool, error) {
 			)
 		}
 	} else {
-		if targetLinfo.IsDir() && originalInfo.IsDir() {
+		if targetLinfo.IsDir() {
 			return true, fmt.Errorf(
-				"target already exist as a directory: `%s`",
+				"target already exist but as a directory instead of symlink: `%s`",
 				p.Target,
 			)
-		} else if !targetLinfo.IsDir() && !originalInfo.IsDir() {
+		} else if !targetLinfo.IsDir() {
 			return true, fmt.Errorf(
-				"target already exist as a file: `%s`",
+				"target already exist but as a file instead of symlink: `%s`",
 				p.Target,
 			)
 		}
@@ -76,49 +76,8 @@ func (p *Path) IsExist() (bool, error) {
 
 func (p *Path) Sanitize() error {
 	p.Base = filepath.Base(p.Original)
-
-	// original
-	if p.Original == "~" {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return err
-		}
-		p.Original = home
-	} else if strings.HasPrefix(p.Original, "~/") {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return err
-		}
-		p.Original = filepath.Join(home, p.Original[2:])
-	} else {
-		absPath, err := filepath.Abs(p.Original)
-		if err != nil {
-			return err
-		}
-		p.Original = absPath
-	}
-
-	// target
-	if p.Target == "~" {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return err
-		}
-		p.Target = home
-	} else if strings.HasPrefix(p.Target, "~/") {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return err
-		}
-		p.Target = filepath.Join(home, p.Target[2:])
-	} else {
-		absPath, err := filepath.Abs(p.Target)
-		if err != nil {
-			return err
-		}
-		p.Target = absPath
-	}
-
+	sanitize(&p.Original)
+	sanitize(&p.Target)
 	return nil
 }
 
@@ -127,4 +86,28 @@ func (p Path) IsSymlink(info os.FileInfo) bool {
 		return true
 	}
 	return false
+}
+
+func sanitize(p *string) error {
+	if *p == "~" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+		*p = home
+	} else if strings.HasPrefix(*p, "~/") {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+		*p = filepath.Join(home, (*p)[2:])
+	} else {
+		absPath, err := filepath.Abs(*p)
+		if err != nil {
+			return err
+		}
+		*p = absPath
+	}
+
+	return nil
 }

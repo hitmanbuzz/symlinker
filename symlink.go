@@ -19,7 +19,7 @@ func NewSymlink(config *Config) *Symlink {
 func (s *Symlink) SetSymLink() (int, error) {
 	if s.config.Version != CURRENT_VERSION {
 		return 0, fmt.Errorf(
-			"%s[ERROR]%s: config version is %d but the program support version %d only",
+			"%s[ERROR]%s: config version is %f but the program support version %f only",
 			RED_COLOR,
 			RESET_COLOR,
 			s.config.Version,
@@ -46,7 +46,7 @@ func (s *Symlink) SetSymLink() (int, error) {
 			)
 		}
 
-		if exist && err == nil {
+		if exist {
 			fmt.Printf("%s[DUPLICATE]%s: %s\n", YELLOW_COLOR, RESET_COLOR, p.Name)
 			continue
 		}
